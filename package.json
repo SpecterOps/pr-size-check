@@ -1,0 +1,13 @@
+{
+  "name": "pr-size-check",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A dependency-free GitHub Action for enforcing pull request diff size.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

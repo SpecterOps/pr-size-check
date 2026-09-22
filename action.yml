@@ -1,0 +1,43 @@
+name: PR size check
+description: Fail a pull request when its counted diff lines exceed a configurable threshold.
+author: Your Organization
+
+inputs:
+  github-token:
+    description: Token used to read pull request files.
+    required: true
+  max-lines:
+    description: Maximum counted lines allowed before the action fails.
+    required: true
+  ignored-paths:
+    description: Newline-separated glob patterns for files excluded from the count.
+    required: false
+    default: ''
+  bypass-label:
+    description: PR label that bypasses this check. Leave empty to disable bypasses.
+    required: false
+    default: ''
+  count:
+    description: 'What to count: additions-and-deletions (default) or additions-only.'
+    required: false
+    default: additions-and-deletions
+  fail-on-exceed:
+    description: Whether to fail when the threshold is exceeded.
+    required: false
+    default: 'true'
+  message:
+    description: Optional message to append to an exceeded-threshold error.
+    required: false
+    default: ''
+
+outputs:
+  counted-lines:
+    description: Total lines after path exclusions.
+  skipped-files:
+    description: Number of changed files excluded by ignored-paths.
+  bypassed:
+    description: Whether the bypass label was present.
+
+runs:
+  using: node20
+  main: src/index.js
