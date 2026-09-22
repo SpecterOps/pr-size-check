@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { calculateSize, getInput, globToRegExp, hasBypassLabel, isIgnored, parsePatterns } from '../src/index.js';
+import { calculateSize, getInput, hasBypassLabel, isIgnored, parsePatterns } from '../src/index.js';
 
 test('parses newline-separated ignored paths', () => {
   assert.deepEqual(parsePatterns('docs/**\n\n **/*.lock \n'), ['docs/**', '**/*.lock']);
@@ -11,11 +11,11 @@ test('reads GitHub action inputs with hyphens intact', () => {
   assert.equal(getInput('github-token', { 'INPUT_GITHUB-TOKEN': 'token' }), 'token');
 });
 
-test('matches familiar GitHub-style path globs', () => {
-  assert.match('docs/guide/setup.md', globToRegExp('docs/**'));
-  assert.match('nested/dependency.lock', globToRegExp('**/*.lock'));
-  assert.match('nested/package-lock.json', globToRegExp('**/package-lock.json'));
-  assert.doesNotMatch('src/docs/readme.md', globToRegExp('docs/**'));
+test('matches paths using Node standard-library globs', () => {
+  assert.equal(isIgnored('docs/guide/setup.md', ['docs/**']), true);
+  assert.equal(isIgnored('nested/dependency.lock', ['**/*.lock']), true);
+  assert.equal(isIgnored('nested/package-lock.json', ['**/package-lock.json']), true);
+  assert.equal(isIgnored('src/docs/readme.md', ['docs/**']), false);
   assert.equal(isIgnored('assets/generated/client.ts', ['**/generated/**']), true);
 });
 

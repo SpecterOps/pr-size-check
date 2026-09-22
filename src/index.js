@@ -1,4 +1,5 @@
 import { appendFile, readFile } from 'node:fs/promises';
+import { matchesGlob } from 'node:path';
 
 const COUNT_MODES = new Set(['additions-and-deletions', 'additions-only']);
 
@@ -6,35 +7,8 @@ export function parsePatterns(value) {
   return value.split(/\r?\n/).map((pattern) => pattern.trim()).filter(Boolean);
 }
 
-export function globToRegExp(pattern) {
-  let expression = '';
-
-  for (let index = 0; index < pattern.length; index += 1) {
-    const character = pattern[index];
-    if (character === '*') {
-      if (pattern[index + 1] === '*') {
-        while (pattern[index + 1] === '*') index += 1;
-        if (pattern[index + 1] === '/') {
-          expression += '(?:.*/)?';
-          index += 1;
-        } else {
-          expression += '.*';
-        }
-      } else {
-        expression += '[^/]*';
-      }
-    } else if (character === '?') {
-      expression += '[^/]';
-    } else {
-      expression += character.replace(/[|\\{}()[\]^$+?.]/g, '\\$&');
-    }
-  }
-
-  return new RegExp(`^${expression}$`);
-}
-
 export function isIgnored(filename, patterns) {
-  return patterns.some((pattern) => globToRegExp(pattern).test(filename));
+  return patterns.some((pattern) => matchesGlob(filename, pattern));
 }
 
 export function calculateSize(files, { patterns = [], count = 'additions-and-deletions' } = {}) {

@@ -39,5 +39,5 @@ outputs:
     description: Whether the bypass label was present.
 
 runs:
-  using: node20
+  using: node24
   main: src/index.js

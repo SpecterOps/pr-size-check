@@ -48,7 +48,7 @@ jobs:
 
 ## Development
 
-Requires Node 20 or newer. Run tests with:
+Runs on GitHub Actions' Node 24 runtime. Run tests locally with Node 24 or newer:
 
 ```sh
 npm test
